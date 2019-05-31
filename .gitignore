@@ -1,0 +1,26 @@
+#SPDX-License-Identifier: Apache-2.0
+
+# Vim file artifacts
+.*.sw*
+*~
+# log files
+*.log
+# config files generated
+*.tx
+*.block
+*genesisblock
+*production/
+# *crypto-config/
+*bin/
+*IssuerPublicKey
+*IssuerRevocationPublicKey
+*fabric-ca-server.db
+*/ca-config/msp/
+*package-lock.json
+*node_modules/
+# tox
+.tox/
+# vscode settings
+.vscode
+# gradle files
+# *gradle*

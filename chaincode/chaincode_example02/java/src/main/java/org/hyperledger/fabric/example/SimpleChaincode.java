@@ -18,6 +18,10 @@ import java.util.List;
 
 
 
+import java.io.File;
+
+import java.io.FileInputStream;
+
 import java.io.FileOutputStream;
 
 import java.io.IOException;
@@ -184,7 +188,15 @@ public class SimpleChaincode extends ChaincodeBase {
 
             }
 
-	    return newErrorResponse("Invalid invoke function name. Expecting one of: [\"invoke\", \"delete\", \"query\",\"fastDFsUploadFile\",\"fastDFsDownloadFile\",\"fastDFsDeleteFile\"]");
+
+
+	    if (func.equals("fastDFsBuildFile")) {
+
+		return fastDFsBuildFile(stub, params);
+
+	    }
+
+	    return newErrorResponse("Invalid invoke function name. Expecting one of: [\"invoke\", \"delete\", \"query\",\"fastDFsUploadFile\",\"fastDFsDownloadFile\",\"fastDFsDeleteFile\",\"fastDFsBuildFile\"]");
 
         } catch (Throwable e) {
 
@@ -523,6 +535,62 @@ public class SimpleChaincode extends ChaincodeBase {
 		return deletemessage;
 
 
+
+	}
+
+
+
+	public static Response fastDFsBuildFile(ChaincodeStub stub, List<String> args ){
+
+		if (args.size() != 2) {
+
+			return newErrorResponse("Incorrect number of arguments. Expecting 2");
+
+		}
+
+		String build_path = args.get(0);
+
+		String file_content = args.get(1);
+
+
+
+		File file = new File(build_path);
+
+		try {
+
+			FileOutputStream out = new FileOutputStream(file);
+
+			byte buy[] = file_content.getBytes();
+
+			out.write(buy);
+
+			out.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		try {
+
+			FileInputStream in = new FileInputStream(file);
+
+			byte buy2[] = new byte[2048];
+
+			int len = in.read(buy2);
+
+//			System.out.println("file content is :" + new String(buy2,0,len));//输出文件内容，测试用。
+
+			in.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		return newSuccessResponse("File read successfully!");
 
 	}
 

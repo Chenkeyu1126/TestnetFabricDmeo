@@ -540,58 +540,44 @@ public class SimpleChaincode extends ChaincodeBase {
 
 
 
-	public static Response fastDFsBuildFile(ChaincodeStub stub, List<String> args ){
-
-		if (args.size() != 2) {
-
-			return newErrorResponse("Incorrect number of arguments. Expecting 2");
-
+	public static Response fastDFsBuildFile(ChaincodeStub stub, List<String> args) { //创建文件并指定文件大小
+		if (args.size() != 3) {
+			return newErrorResponse("Incorrect number of arguments. Expecting 3");
 		}
-
 		String build_path = args.get(0);
-
 		String file_content = args.get(1);
-
-
+		int file_size = Integer.parseInt(args.get(2));
+		
 
 		File file = new File(build_path);
+		if (file.exists()) {
+			return newErrorResponse("The file is already exists");
+		} else {
+			try {
+				FileOutputStream out = new FileOutputStream(file);
+				byte buy[] = file_content.getBytes();
+				out.write(buy);
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				FileInputStream in = new FileInputStream(file);
 
-		try {
-
-			FileOutputStream out = new FileOutputStream(file);
-
-			byte buy[] = file_content.getBytes();
-
-			out.write(buy);
-
-			out.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
-		}
-
-		try {
-
-			FileInputStream in = new FileInputStream(file);
-
-			byte buy2[] = new byte[2048];
-
-			int len = in.read(buy2);
-
+				byte buy2[] = new byte[file_size];
+				int len = in.read(buy2);
+				FileInputStream fis = new FileInputStream(file);
+				if (fis.available() > file_size) {
+					return newErrorResponse("The file exceeds" + " " + file_size + "Byte" + " the specified size");
+				} 
 //			System.out.println("file content is :" + new String(buy2,0,len));//输出文件内容，测试用。
-
-			in.close();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
+				in.close();
+				fis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 		}
-
 		return newSuccessResponse("File read successfully!");
-
 	}
 
 

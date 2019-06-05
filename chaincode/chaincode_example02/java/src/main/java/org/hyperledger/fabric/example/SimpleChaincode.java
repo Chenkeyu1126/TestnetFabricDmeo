@@ -549,7 +549,7 @@ public class SimpleChaincode extends ChaincodeBase {
 
 		File file = new File(build_path);
 		if (file.exists()) {
-			file.delete();
+			//file.delete();
 			return newErrorResponse("The file is already exists");
 		}
 		try {
